@@ -17,4 +17,3 @@ dependencyResolutionManagement {
 rootProject.name = "galleryAI_diplom"
 
 include(":app")
-//include(":libs:OpenCV")
