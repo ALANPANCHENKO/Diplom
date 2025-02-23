@@ -1,49 +1,91 @@
 package com.example.galleryai_diplom;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import androidx.recyclerview.widget.GridLayoutManager;//для отображения списка
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+//import org.opencv.android.OpenCVLoader;
+//import org.opencv.core.Mat;
+//import org.opencv.imgcodecs.Imgcodecs;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-
 import android.os.Bundle;
-import android.widget.Toast;//вывод кратковременных уведомлений
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
-import java.util.ArrayList;
 
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-
-public class MainActivity extends AppCompatActivity { //AppCompatActivity позволяет использовать
-    //стандартные возможности Android
     private static final int REQUEST_PERMISSIONS = 101;
-    private RecyclerView recyclerView; //переменная для отображения изображений
-    private ImageAdapter adapter; //адаптер, который свяжет данные с RycyclerView
+    private RecyclerView recyclerView;
+    private ImageAdapter adapter;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); //подгрузка интерфейса
+        setContentView(R.layout.activity_main);
 
-        recyclerView = findViewById(R.id.recyclerView); //находит recyclerView в разметке
-        // по его идентификатору
+//        if (!OpenCVLoader.initDebug()) {
+//            Log.e("OpenCV", "Ошибка инициализации OpenCV");
+//        } else {
+//            Log.d("OpenCV", "OpenCV успешно загружен");
+//        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { //проверка версии Android
+        //инициализация toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+        navigationView = findViewById(R.id.navigation_view);
+        recyclerView = findViewById(R.id.recyclerView);
+
+        // Настройка меню
+        navigationView.setNavigationItemSelectedListener(this);
+
+        // Добавляем кнопку открытия меню
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, R.string.open_drawer, R.string.close_drawer);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             checkAndRequestPermissions();
         } else {
             setupGallery();
         }
     }
 
+//    private void testOpenCV() {
+//        Mat img = Imgcodecs.imread("/storage/emulated/0/DCIM/test.jpg");
+//        if (img.empty()) {
+//            Log.e("OpenCV", "Ошибка загрузки изображения");
+//        } else {
+//            Log.d("OpenCV", "Изображение загружено успешно");
+//        }
+//    }
+
     private void checkAndRequestPermissions() {
-        //создание массива разрешений
         String[] permissions = {
                 Manifest.permission.READ_MEDIA_IMAGES,
                 Manifest.permission.READ_MEDIA_VIDEO,
@@ -51,16 +93,13 @@ public class MainActivity extends AppCompatActivity { //AppCompatActivity поз
         };
 
         boolean allGranted = true;
-        //цикл проходит по каждому разрешению и с помощью checkSelfPermission проверяет,
-        //предоставлено ли разрешение.
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 allGranted = false;
                 break;
             }
         }
-        //если не все разршения предоставлены, вызывается ActivityCompat.requestPermissions, который
-        //отображает диалог запроса разрешений пользователю
+
         if (!allGranted) {
             ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSIONS);
         } else {
@@ -68,8 +107,6 @@ public class MainActivity extends AppCompatActivity { //AppCompatActivity поз
         }
     }
 
-
-    //метод вызывается после того, как пользователь ответил на запрос разрешений
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -89,15 +126,41 @@ public class MainActivity extends AppCompatActivity { //AppCompatActivity поз
         }
     }
 
-    private void setupGallery(){
-        List<String> images = ImageUtils.loadImages(this);//возвращает список строк, которые
-        //находятся на устройстве.
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));//устанавливает менеджер компановки
-        //создает сетку с 2 столбцами
+    private void setupGallery() {
+        List<String> images = ImageUtils.loadImages(this);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         adapter = new ImageAdapter(this, images);
         recyclerView.setAdapter(adapter);
 
         Toast.makeText(this, "Все разрешения предоставлены", Toast.LENGTH_SHORT).show();
     }
-}
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_gallery) {
+            Toast.makeText(this, "Галерея выбрана", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_settings) {
+            Toast.makeText(this, "Настройки пока недоступны", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_about) {
+            Toast.makeText(this, "О приложении", Toast.LENGTH_SHORT).show();
+        }
+//        else if (id == R.id.nav_ai_search) {
+//            Intent intent = new Intent(this, FaceSearchActivity.class);
+//            startActivity(intent);
+//        }
+
+        drawerLayout.closeDrawers();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            drawerLayout.open();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}
