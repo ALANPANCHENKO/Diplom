@@ -6,6 +6,7 @@ android {
     namespace = "com.example.galleryai_diplom"
     compileSdk = 34
 
+
     defaultConfig {
         applicationId = "com.example.galleryai_diplom"
         minSdk = 24
@@ -39,10 +40,10 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation ("androidx.recyclerview:recyclerview:1.3.0")
     implementation ("com.github.bumptech.glide:glide:4.15.1")
+    implementation(project(":sdk"))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-
 //    implementation("org.opencv:opencv-android:4.5.3")
 //    compile 'com.android.support:appcompat-v7:+'
 //    compile project(':app:libs:OpenCV')

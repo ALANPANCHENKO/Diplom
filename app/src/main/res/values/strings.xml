@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">galleryAI_diplom</string>
-    <string name="open_drawer">Открыть меню</string>
-    <string name="close_drawer">Закрыть меню</string>
 </resources>

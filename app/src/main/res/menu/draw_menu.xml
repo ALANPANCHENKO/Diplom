@@ -10,7 +10,7 @@
         android:icon="@android:drawable/ic_menu_preferences"/>
     <item
         android:id="@+id/nav_ai_search"
-        android:title="AI поиск"
+        android:title="Поиск по лицу"
         android:icon="@android:drawable/ic_menu_info_details"/>
     <item
         android:id="@+id/nav_about"

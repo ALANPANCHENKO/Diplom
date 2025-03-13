@@ -13,10 +13,8 @@
 //
 //        PhotoView photoView = findViewById(R.id.photo_view);
 //
-//        // Получаем путь к изображению из Intent
 //        String imagePath = getIntent().getStringExtra("image_path");
 //
-//        // Загружаем изображение в PhotoView с помощью Picasso
 //        Picasso.get().load("file://" + imagePath).into(photoView);
 //    }
 //}

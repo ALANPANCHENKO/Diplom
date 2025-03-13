@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageUtils {
-    public static List<String> loadImages(Context context) {
+    public static List<String> loadImages_utils(Context context) {
         List<String> imagePaths = new ArrayList<>();
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {MediaStore.Images.Media.DATA};

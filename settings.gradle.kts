@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "galleryAI_diplom"
 
 include(":app")
+include(":sdk")
